@@ -1,0 +1,75 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claim System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Submit a Claim</h1>
+        <form id="claimForm">
+            <input type="text" id="vehicleInfo" placeholder="Vehicle Info" required>
+            <textarea id="accidentDescription" placeholder="Accident Description" required></textarea>
+            <button type="submit">Submit Claim</button>
+        </form>
+
+        <h2>Your Claims</h2>
+        <ul id="claimsList"></ul>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claim System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Insurance Claim System</h1>
+
+        <!-- Registration Form -->
+        <div id="registration">
+            <h2>Register</h2>
+            <form id="registerForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <input type="text" id="role" placeholder="Role (OWNER, ADMIN, ADJUSTER)" required>
+                <button type="submit">Register</button>
+            </form>
+            <p id="registerMessage"></p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="login">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <input type="text" id="loginUsername" placeholder="Username" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p id="loginMessage"></p>
+        </div>
+
+        <!-- Claim Form (Hidden by Default) -->
+        <div id="claimSection" style="display: none;">
+            <h2>Submit a Claim</h2>
+            <form id="claimForm">
+                <input type="text" id="vehicleInfo" placeholder="Vehicle Info" required>
+                <textarea id="accidentDescription" placeholder="Accident Description" required></textarea>
+                <button type="submit">Submit Claim</button>
+            </form>
+
+            <h2>Your Claims</h2>
+            <ul id="claimsList"></ul>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
