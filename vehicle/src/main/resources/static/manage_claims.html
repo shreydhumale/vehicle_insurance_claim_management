@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Claims</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ddd; }
+        button { padding: 5px 10px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Manage Insurance Claims</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Vehicle Info</th>
+                <th>Accident Description</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="claimsTable"></tbody>
+    </table>
+
+    <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+    <script>
+        const role = localStorage.getItem("role");
+        const username = localStorage.getItem("username");
+
+        if (role !== "ADMIN" && role !== "ADJUSTER") {
+            alert("Access Denied!");
+            window.location.href = "dashboard.html"; // Redirect unauthorized users
+        }
+
+        function loadClaims() {
+            fetch("http://localhost:8081/api/claims/all", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Basic " + btoa(username + ":password"), // ⚠️ Replace 'password' if needed
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Claims Data:", data);
+                const table = document.getElementById("claimsTable");
+                table.innerHTML = "";
+                data.forEach(claim => {
+                    const row = `<tr>
+                        <td>${claim.id}</td>
+                        <td>${claim.vehicleInfo}</td>
+                        <td>${claim.accidentDescription}</td>
+                        <td>${claim.claimStatus}</td>
+                        <td>
+                            <button onclick="updateClaim(${claim.id}, 'APPROVED')">Approve</button>
+                            <button onclick="updateClaim(${claim.id}, 'REJECTED')">Reject</button>
+                        </td>
+                    </tr>`;
+                    table.innerHTML += row;
+                });
+            })
+            .catch(error => {
+                console.error("Error loading claims:", error);
+                alert("Error loading claims: " + error.message);
+            });
+        }
+
+        function updateClaim(id, status) {
+            fetch(`http://localhost:8081/api/claims/update/${id}?status=${status}&role=${role}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": "Basic " + btoa(username + ":password"),
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadClaims(); // Reload claims after update
+            })
+            .catch(error => {
+                console.error("Error updating claim:", error);
+                alert("Error updating claim.");
+            });
+        }
+
+        loadClaims();
+    </script>
+</body>
+</html>

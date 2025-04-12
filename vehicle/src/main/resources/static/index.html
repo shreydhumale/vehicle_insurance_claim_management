@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Insurance Claim Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: rgb(212, 212, 212);
+            color: #2c3e50;
+        }
+
+        header {
+            background: linear-gradient(to right, #3a7bd5, #4f94d4);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #4f94d4;
+            padding: 12px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 18px;
+            font-size: 1.1em;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('insurance-bg.jpg') no-repeat center center/cover;
+            color: #2c3e50;
+            font-size: 1.2em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            text-align: center;
+            padding: 50px;
+            background-color: rgb(219, 237, 255);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            width: 80%;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .feature-box {
+            background: #eaf2ff;
+            padding: 25px;
+            width: 45%;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            color: #2c3e50;
+            transition: 0.3s;
+        }
+
+        .feature-box:hover {
+            background: #d6e4ff;
+            transform: translateY(-5px);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(to right, #3a7bd5, #4f94d4);
+            color: white;
+            font-size: 0.9em;
+            margin-top: 30px;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.2);
+        }
+		
+    </style>
+</head>
+
+<body>
+    <header>
+        Vehicle Insurance Claim Management
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="hero">
+        <h1>Secure & Fast Insurance Claims</h1>
+        <p>Submit your claims online and get updates instantly.</p>
+    </div>
+
+    <div class="container">
+        <h2>Our Services</h2>
+        <div class="features">
+            <div class="feature-box">
+                <h3>File a Claim Easily</h3>
+                <p>Submit your insurance claims online with a simple process.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Admin & Adjuster Portal</h3>
+                <p>Manage claims efficiently through a dedicated portal.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" id="contact">
+        <p>Contact Us: support@vehicleclaims.com | +91 98765 43210</p>
+        <p>&copy; 2025 Vehicle Insurance Claim Management</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Vehicle Insurance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: rgb(206, 206, 206);
+            text-align: center;
+            padding: 30px;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input, textarea, button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .logout-btn {
+            background-color: red;
+            color: white;
+        }
+        .logout-btn:hover {
+            background-color: darkred;
+        }
+        .claims-list {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .claim-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .status {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .approved { color: green; }
+        .pending { color: orange; }
+        .rejected { color: red; }
+		
+		.admin-panel {
+		    display: none;
+		    margin-top: 10px;
+		    padding: 15px;
+		    background: #f1f1f1;
+		    border-radius: 5px;
+		    max-width: 700px;
+		    margin-left: auto;
+		    margin-right: auto;
+		    text-align: center;
+		}
+
+		
+        .admin-panel a {
+            display: block;
+            margin-top: 10px;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .admin-panel a:hover {
+            background: #218838;
+        }
+		
+		.btn-back button{
+			padding: 5px;
+			max-width: 700px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position:absolute;
+			left: 283px;
+			margin-top: 5px;		
+		}
+
+		.btn-back:hover button{
+		    background: rgb(117, 183, 255);
+		}
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Welcome, <strong id="usernameDisplay"></strong></h2>
+
+        <button class="btn logout-btn" onclick="logout()">Logout</button>
+
+        <h3>Submit a New Claim</h3>
+        <form id="claimForm">
+            <input type="text" id="vehicleInfo" placeholder="Vehicle Information" required>
+            <textarea id="accidentDescription" placeholder="Describe the accident" required></textarea>
+            <button type="submit" class="btn">Submit Claim</button>
+        </form>
+
+        <h3>Your Claims</h3>
+        <div id="claimsList" class="claims-list"></div>
+    </div>
+
+    <div id="adminPanel" class="admin-panel">
+        <h3>Admin Dashboard</h3>
+        <a href="admin_dashboard.html">Manage Claims</a>
+    </div>
+	<div class="btn-back">
+	<button onclick="goBack()"  >🔙</button>
+	</div>
+    <script>
+        const username = localStorage.getItem("username");
+        const role = localStorage.getItem("role");
+
+        if (!username) {
+            alert("You must log in first!");
+            window.location.href = "login.html";
+        } else {
+            document.getElementById("usernameDisplay").innerText = username;
+
+            // ✅ Show Admin Panel only for Admins
+            if (role === "ADMIN") {
+                document.getElementById("adminPanel").style.display = "block";
+            }
+        }
+
+        document.getElementById('claimForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const claimData = {
+                vehicleInfo: document.getElementById('vehicleInfo').value,
+                accidentDescription: document.getElementById('accidentDescription').value
+            };
+
+            fetch(`http://localhost:8081/api/claims/submit?username=${username}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(claimData)	
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                loadUserClaims();
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Claim submission failed!");
+            });
+        });
+
+        function loadUserClaims() {
+            fetch(`http://localhost:8081/api/claims/user/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    const claimsList = document.getElementById('claimsList');
+                    claimsList.innerHTML = ""; 
+
+                    if (data.length === 0) {
+                        claimsList.innerHTML = "<p>No claims submitted yet.</p>";
+                    } else {
+                        data.forEach(claim => {
+                            const claimDiv = document.createElement("div");
+                            claimDiv.className = "claim-item";
+                            claimDiv.innerHTML = `
+                                <p><strong>Claim ID:</strong> ${claim.id}</p>
+                                <p><strong>Vehicle Info:</strong> ${claim.vehicleInfo}</p>
+                                <p><strong>Description:</strong> ${claim.accidentDescription}</p>
+                                <p><strong>Status:</strong> <span class="status ${claim.claimStatus.toLowerCase()}">${claim.claimStatus}</span></p>
+                            `;
+                            claimsList.appendChild(claimDiv);
+                        });
+                    }
+                })
+                .catch(error => console.error("Error loading claims:", error));
+        }
+
+        function logout() {
+            localStorage.removeItem("username");
+            localStorage.removeItem("role"); 
+            alert("You have been logged out!");
+            window.location.href = "login.html";
+        }
+
+        loadUserClaims();
+		
+		function goBack() {
+		       window.history.back();
+		   }
+    </script>
+
+</body>
+</html>
+
+
+

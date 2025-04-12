@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Claim</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        form { display: inline-block; text-align: left; }
+        input, textarea, button { display: block; margin: 10px 0; padding: 10px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h2>Submit Insurance Claim</h2>
+    <form id="claimForm">
+        <input type="text" id="vehicleInfo" placeholder="Vehicle Info" required>
+        <textarea id="accidentDescription" placeholder="Accident Description" required></textarea>
+        <button type="submit">Submit Claim</button>
+    </form>
+
+    <p><a href="dashboard.html">Back to Dashboard</a></p>
+
+    <script>
+        document.getElementById("claimForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const claim = {
+                vehicleInfo: document.getElementById("vehicleInfo").value,
+                accidentDescription: document.getElementById("accidentDescription").value
+            };
+
+            const username = localStorage.getItem("username"); // Get logged-in user
+
+            fetch(`http://localhost:8081/api/claims/submit?username=${username}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(claim)
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                if (data.includes("successfully")) {
+                    window.location.href = "dashboard.html";
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Claim submission failed.");
+            });
+        });
+    </script>
+</body>
+</html>
